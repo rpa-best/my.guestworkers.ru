@@ -1,6 +1,8 @@
 from django.contrib import admin
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
+from django.http.response import HttpResponse
+from django.conf import settings
 from unfold.admin import ModelAdmin
 from unfold.decorators import action
 from unfold.enums import ActionVariant
@@ -18,7 +20,7 @@ from .inlines import *
 
 @admin.register(Worker) 
 class WorkerAdmin(ImportExportMixin, ModelAdmin):
-    actions_list = ['update_from_1c']
+    actions_list = ['update_from_1c', 'download_import_file']
     search_fields = ['passport', 'fio']
     list_display = ['fio', 'passport']
     inlines = [WorkerDocInline]
@@ -59,6 +61,21 @@ class WorkerAdmin(ImportExportMixin, ModelAdmin):
     
     def has_update_from_1c_permission(self, request, *args, **kwargs):
         return request.user.has_perm('workers.add_worker')
+    
+    @action(
+        description='Скачать пример импорта',
+        url_path='download_import_file',
+        icon='download',
+        variant=ActionVariant.INFO
+    )
+    def download_import_file(self, request):
+        file_path = settings.BASE_DIR / 'workers/static/workers/worker_import.xlsx'
+        response = HttpResponse(
+            open(file_path, 'rb'),
+            content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        )
+        response['Content-Disposition'] = f'attachment; filename="worker_import.xlsx"'
+        return response
 
 
 @admin.register(DocType)
