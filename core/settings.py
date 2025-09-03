@@ -52,6 +52,11 @@ INSTALLED_APPS = [
 
     'core',
     'users',
+    'organizations',
+    'workers',
+    'bitrix',
+    'mprofid',
+
     'simple_history',
     'import_export',
     'corsheaders',
@@ -159,25 +164,26 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 X_FRAME_OPTIONS = 'ALLOWALL'
 
 UNFOLD = {
-    "SITE_TITLE": "GuestWorkers",
-    "SITE_HEADER": 'GuestWorkers',
+    "SITE_TITLE": "Капитал кадры",
+    "SITE_HEADER": 'Капитал кадры',
+    "SITE_SUBHEADER": "Панель управления",
     "SITE_URL": "/",
     "SITE_ICON": {
-        "light": lambda request: static('core/logo.jpg'),  # light mode
-        "dark": lambda request: static('core/logo.jpg'),  # dark mode
+        "light": lambda request: static('/logo.png'),  # light mode
+        "dark": lambda request: static('/logo.png'),  # dark mode
     },
     "SITE_FAVICONS": [
         {
             "rel": "icon",
             "sizes": "32x32",
             "type": "image/jpg",
-            "href": lambda request: static('core/logo.jpg'),
+            "href": lambda request: static('/logo.png'),
         },
     ],
     "ENVIRONMENT": ["Development" , "info"] if DEBUG else ["Production" , "danger"], # environment name in header
-    "DASHBOARD_CALLBACK": "core.views.dashboard_callback",
+    # "DASHBOARD_CALLBACK": "core.views.dashboard_callback",
     "LOGIN": {
-        "image": lambda request: static('core/login-bg.jpg'),
+        "image": lambda request: static('/login-bg.png'),
     },
     "BORDER_RADIUS": "6px",
     "COLORS": {
@@ -195,17 +201,17 @@ UNFOLD = {
             "950": "3 7 18",
         },
         "primary": {
-            "50": "250 245 255",
-            "100": "243 232 255",
-            "200": "233 213 255",
-            "300": "216 180 254",
-            "400": "192 132 252",
-            "500": "168 85 247",
-            "600": "147 51 234",
-            "700": "126 34 206",
-            "800": "107 33 168",
-            "900": "88 28 135",
-            "950": "59 7 100",
+            "50":  "236 254 255",  
+            "100": "207 250 254",
+            "200": "165 243 252",
+            "300": "103 232 249",
+            "400": "34 211 238",
+            "500": "6 182 212",     
+            "600": "8 145 178",
+            "700": "14 116 144",
+            "800": "21 94 117",
+            "900": "22 78 99",
+            "950": "8 51 68"   
         },
         "font": {
             "subtle-light": "var(--color-base-500)",  # text-base-500
@@ -219,7 +225,32 @@ UNFOLD = {
     "EXTENSIONS": {},
     "SIDEBAR": {
         "show_all_applications": lambda request: request.user.is_superuser,
-        "navigation": []
+        "navigation": [
+            {
+                "title": "Главная",
+                "icon": "home",
+                "items": [
+                    {
+                        "title": "Компании",
+                        "icon": "domain",
+                        "link": reverse_lazy('admin:organizations_organization_changelist'),
+                        'permission': lambda request: request.user.has_perm('organizations.view_organization'),
+                    },
+                    {
+                        'title': 'Сотрудники',
+                        'icon': 'people',
+                        'link': reverse_lazy('admin:workers_worker_changelist'),
+                        'permission': lambda request: request.user.has_perm('workers.view_worker'),
+                    },
+                    {
+                        'title': 'Медицина',
+                        'icon': 'medical_information',
+                        'link': reverse_lazy('admin:mprofid_workerinvoice_changelist'),
+                        'permission': lambda request: request.user.has_perm('mprofid.view_workerinvoice'),
+                    }
+                ]
+            }
+        ]
     },
     "TABS": [],
 }

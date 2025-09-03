@@ -3,12 +3,12 @@ from django.utils.translation import gettext_lazy as _
 
 
 class Roles(TextChoices):
-    OWNER = ('owner', _('Owner'))
-    CLIENT = ('client', _('Client'))
-    WORKER = ('worker', _('Worker'))
+    OWNER = ('owner', _('Владелец'))
+    CLIENT = ('client', _('Клиент'))
+    WORKER = ('worker', _('Сотрудник'))
 
 
 
 class Statuses(TextChoices):
-    CHECKING = ('checking', _('Checking'))
-    DONE = ('done', _('Done'))
+    CHECKING = ('checking', _('На проверка'))
+    DONE = ('done', _('Праверено'))

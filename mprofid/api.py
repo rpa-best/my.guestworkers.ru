@@ -28,7 +28,7 @@ class Api:
     GET_MED = '/dictionary/med'
     GET_STATUS = '/dictionary/status'
     GET_SURVEY = '/dictionary/survey'
-    GET_PAYTYPES = '/dictionary/paytypes'
+    GET_PAYTYPES = '/dictionary/payTypes'
     GET_HAZARDS = '/dictionary/hazards'
     GET_HAZARDS377 = '/dictionary/hazards377'
 
@@ -242,7 +242,7 @@ class Api:
         url = self.GET_SURVEY
         return self.request('GET', url)
 
-    def get_paytypes(self):
+    def get_pay_types(self):
         url = self.GET_PAYTYPES
         return self.request('GET', url)
 

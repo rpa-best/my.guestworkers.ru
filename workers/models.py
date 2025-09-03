@@ -3,31 +3,6 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from simple_history.models import HistoricalRecords
 
-SOON_EXPIRE_LIMIT = timezone.timedelta(days=5)
-UPLOAD_KWARGS_PASSPORT = 'Серия, номер паспорта'
-UPLOAD_KWARGS = (
-    ('first_name', 'Имя', 'Пётр'),
-    ('last_name', 'Фамилия', 'Петров'),
-    ('surname', 'Отчество', 'Петрович'),
-    ('passport', UPLOAD_KWARGS_PASSPORT, "99 99 999999"),
-)
-DEFAULT_DOC_TYPES = [
-    {'slug': 'chek_do', 'name': 'Чек до '},
-    {'slug': 'polis_oms_do', 'name': 'Полис ОМС до'},
-    {'slug': 'polis_dms_do', 'name': 'Полис ДМС до'},
-    {'slug': 'projivanie_do', 'name': 'Разрешение на временное проживание до'},
-    {'slug': 'jitelstvo_o', 'name': 'Вид на жительство до'},
-    {'slug': 'potent_do', 'name': 'патент до'},
-]
-DOC_STATUS_NORM = "norm"
-DOC_STATUS_EXPIRED = "expired"
-DOC_STATUS_SOON_EXPIRED = "soon_expired"
-DOC_STATUS = (
-    (DOC_STATUS_EXPIRED, DOC_STATUS_EXPIRED),
-    (DOC_STATUS_SOON_EXPIRED, DOC_STATUS_SOON_EXPIRED),
-    (DOC_STATUS_NORM, DOC_STATUS_NORM),
-)
-
 
 class Worker(models.Model):
     passport = models.CharField(max_length=255, verbose_name="Паспорт", unique=True)
@@ -35,6 +10,11 @@ class Worker(models.Model):
 
     def __str__(self) -> str:
         return self.fio
+    
+    class Meta:
+        verbose_name = "Сотрудник"
+        verbose_name_plural = "Сотрудники"
+        
 
 class DocType(models.Model):
     slug = models.SlugField(primary_key=True)
@@ -59,6 +39,6 @@ class WorkerDoc(models.Model):
     history = HistoricalRecords()
     
     class Meta:
-        unique_together = (("type", "user"),)
+        unique_together = (("type", "worker"),)
         verbose_name = "Документа сотрудника"
         verbose_name_plural = "Документы сотрудника"

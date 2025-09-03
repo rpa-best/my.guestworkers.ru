@@ -4,7 +4,8 @@ from organizations.choices import Roles, Statuses
 from organizations.models import Organization, WorkerToOrganization
 from organizations.validators import inn_check_api_validator
 from .ftp import get_workers
-from .models import Worker, WorkerDoc, DEFAULT_DOC_TYPES
+from .constants import DEFAULT_DOC_TYPES
+from .models import Worker, WorkerDoc
 
 
 def update_workers_from_onec():

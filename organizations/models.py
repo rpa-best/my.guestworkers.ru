@@ -23,15 +23,15 @@ class Organization(models.Model):
     history = HistoricalRecords()
 
     class Meta:
-        verbose_name = "Организация"
-        verbose_name_plural = "Организации"
+        verbose_name = "Компания"
+        verbose_name_plural = "Компании"
 
     def __str__(self) -> str:
         return self.name if self.name else self.inn
     
 class WorkerToOrganization(models.Model):
     org = models.ForeignKey(Organization, models.CASCADE, verbose_name=_('Организация'))
-    worker = models.ForeignKey('workers.Worker', models.CASCADE, verbose_name=_('Пользовател'))
+    worker = models.ForeignKey('workers.Worker', models.CASCADE, verbose_name=_('Сотрудник'))
     status = models.CharField(max_length=20, choices=Statuses.choices, null=True, verbose_name=_('Статус'))
     role = models.CharField(max_length=20, choices=Roles.choices, default=Roles.WORKER, verbose_name=_('Роль'))
     
@@ -45,9 +45,9 @@ class WorkerToOrganization(models.Model):
     
 
 class OrganizationDoc(models.Model):
-    org = models.ForeignKey(Organization, models.CASCADE)
-    file = models.FileField(upload_to="orgdocs/")
-    date = models.DateTimeField(auto_now_add=True)
+    org = models.ForeignKey(Organization, models.CASCADE, verbose_name=_('Компания'))
+    file = models.FileField(upload_to="orgdocs/", verbose_name='Файл')
+    date = models.DateTimeField(auto_now_add=True, verbose_name=_('Дата загрузки'))
     user = models.ForeignKey(settings.AUTH_USER_MODEL, models.SET_NULL, verbose_name=_('Пользовател'), blank=True, null=True)
 
     class Meta:
@@ -56,11 +56,11 @@ class OrganizationDoc(models.Model):
 
 
 class OrganizationTabel(models.Model):
-    org = models.ForeignKey(Organization, models.CASCADE)
-    worker = models.ForeignKey('workers.Worker', models.CASCADE)
-    date = models.DateField()
-    value = models.FloatField()
-    editable = models.BooleanField(default=True)
+    org = models.ForeignKey(Organization, models.CASCADE, verbose_name=_('Компания'))
+    worker = models.ForeignKey('workers.Worker', models.CASCADE, verbose_name=_('Сотрудник'))
+    date = models.DateField(verbose_name=_('Дата'))
+    value = models.FloatField(verbose_name=_('Значение'))
+    editable = models.BooleanField(default=True, verbose_name=_('Редактируемость'))
 
     class Meta:
         verbose_name = "Табель"
@@ -68,14 +68,25 @@ class OrganizationTabel(models.Model):
 
 
 class DocumentType(models.Model):
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, verbose_name="Название")
 
     def __str__(self) -> str:
         return self.name
+    
+    class Meta:
+        verbose_name = "Тип документа"
+        verbose_name_plural = "Типы документов"
 
 
 class Document(models.Model):
-    date = models.DateField()
-    org = models.ForeignKey(Organization, models.CASCADE)
-    type = models.ForeignKey(DocumentType, models.CASCADE)
-    file = models.FileField(upload_to="doc/")
+    date = models.DateField(verbose_name="Дата")
+    org = models.ForeignKey(Organization, models.CASCADE, verbose_name="Компания")
+    type = models.ForeignKey(DocumentType, models.CASCADE, verbose_name="Тип документа")
+    file = models.FileField(upload_to="doc/", verbose_name="Файл")
+
+    def __str__(self) -> str:
+        return ''.join([str(self.org), self.type])
+
+    class Meta:
+        verbose_name = "Документ"
+        verbose_name_plural = "Документы"
