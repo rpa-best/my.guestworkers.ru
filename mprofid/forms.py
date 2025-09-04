@@ -158,8 +158,8 @@ class WorkerInvoiceCreateForm(forms.ModelForm):
         
         self.fields['surveyTypeId'].choices = [(i['id'], i['name']) for i in api.get_survey().json().get('surveyTypes', [])]
         self.fields['payType'].choices = [(i['id'], i['name']) for i in api.get_pay_types().json().get('payTypes', [])]
-        self.fields['medCentrId'].choices = [(i['id'], i['name']) for i in api.get_medcenters().json().get('medCenters', [])]
-        self.fields['medClientId'].choices = [(i['id'], i['name']) for i in medClientIds]
+        self.fields['medCentrId'].choices = [(i['id'], f"{i['name']} ({i['id']})") for i in api.get_medcenters().json().get('medCenters', [])]
+        self.fields['medClientId'].choices = [(i['id'], f"{i['name']} ({i['id']})") for i in medClientIds]
         self.fields['subdivisionId'].choices = [(i['id'], i['name']) for i in api.get_subdivisions(medClientId).json().get('subdivisions', [])]
         self.fields['professionId'].choices = [(i['id'], i['name']) for i in api.get_professions(medClientId).json().get('professions', [])]
         self.fields['services'].choices = [(i['id'], i['name']) for i in api.get_services().json().get('services', [])]

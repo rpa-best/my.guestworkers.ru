@@ -1,0 +1,13 @@
+version: '3.3'
+
+services:
+  my-web:
+    image: khtkarimzhonov/my.guestworkers.ru:latest
+    volumes:
+      - ./static/:/app/static/
+      - ./media/:/app/media/
+    ports:
+      - "8000:8000"
+    command: uvicorn core.asgi:application --host 0.0.0.0 --port 8000 --workers 4
+    env_file:
+      - .env
